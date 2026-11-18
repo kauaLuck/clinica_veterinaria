@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetCare - Sistema de Clínica Veterinária</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./script/script.js"></script>
+</head>
+<body>
+<header>
+    <h1>🐾 VetCare — Clínica Veterinária</h1>
+    <p>Gestão de Tutores, Pacientes, Equipe, Serviços e Agendamentos</p>
+</header>
+
+<nav class="tabs">
+    <button class="tab-btn active" onclick="trocarAba('consultas')">Consultas</button>
+    <button class="tab-btn" onclick="trocarAba('pets')">Pets</button>
+    <button class="tab-btn" onclick="trocarAba('tutores')">Tutores</button>
+    <button class="tab-btn" onclick="trocarAba('veterinarios')">Veterinários</button>
+    <button class="tab-btn" onclick="trocarAba('servicos')">Serviços</button>
+</nav>
+
+<main>
+    <!-- Área de alertas (Sucesso / Erro / Carregando) -->
+    <div id="feedback" class="feedback hidden"></div>
+
+    <!-- ABA 1: CONSULTAS -->
+    <section id="sec-consultas" class="tab-content active">
+        <h2>Agendar / Editar Consulta</h2>
+        <form id="form-consultas" class="card-form">
+            <input type="hidden" id="consulta-id">
+            <div class="grid-form">
+                <select id="consulta-pet" required><option value="">Selecione o Pet...</option></select>
+                <select id="consulta-vet" required><option value="">Selecione o Veterinário...</option></select>
+                <select id="consulta-servico" required><option value="">Selecione o Serviço...</option></select>
+                <input type="datetime-local" id="consulta-data" required>
+                <select id="consulta-status">
+                    <option value="AGENDADA">AGENDADA</option>
+                    <option value="REALIZADA">REALIZADA</option>
+                    <option value="CANCELADA">CANCELADA</option>
+                </select>
+                <input type="text" id="consulta-diagnostico" placeholder="Diagnóstico / Observações">
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn-primary">Salvar Consulta</button>
+                <button type="button" class="btn-secondary" onclick="limparForm('consultas')">Cancelar</button>
+            </div>
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr><th>ID</th><th>Data/Hora</th><th>Pet</th><th>Veterinário</th><th>Serviço</th><th>Status</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="lista-consultas"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABA 2: PETS -->
+    <section id="sec-pets" class="tab-content">
+        <h2>Cadastrar / Editar Pet</h2>
+        <form id="form-pets" class="card-form">
+            <input type="hidden" id="pet-id">
+            <div class="grid-form">
+                <input type="text" id="pet-nome" placeholder="Nome do Pet *" required>
+                <input type="text" id="pet-especie" placeholder="Espécie (Cão, Gato...) *" required>
+                <input type="text" id="pet-raca" placeholder="Raça">
+                <input type="date" id="pet-nascimento" title="Data de Nascimento">
+                <input type="number" step="0.01" id="pet-peso" placeholder="Peso (kg)">
+                <select id="pet-tutor" required><option value="">Selecione o Tutor *</option></select>
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn-primary">Salvar Pet</button>
+                <button type="button" class="btn-secondary" onclick="limparForm('pets')">Cancelar</button>
+            </div>
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr><th>ID</th><th>Nome</th><th>Espécie/Raça</th><th>Peso</th><th>Tutor</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="lista-pets"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABA 3: TUTORES -->
+    <section id="sec-tutores" class="tab-content">
+        <h2>Cadastrar / Editar Tutor</h2>
+        <form id="form-tutores" class="card-form">
+            <input type="hidden" id="tutor-id">
+            <div class="grid-form">
+                <input type="text" id="tutor-nome" placeholder="Nome Completo *" required>
+                <input type="text" id="tutor-cpf" placeholder="CPF (apenas números) *" maxlength="14" required>
+                <input type="text" id="tutor-telefone" placeholder="Telefone *" required>
+                <input type="email" id="tutor-email" placeholder="E-mail">
+                <input type="text" id="tutor-endereco" placeholder="Endereço">
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn-primary">Salvar Tutor</button>
+                <button type="button" class="btn-secondary" onclick="limparForm('tutores')">Cancelar</button>
+            </div>
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr><th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="lista-tutores"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABA 4: VETERINÁRIOS -->
+    <section id="sec-veterinarios" class="tab-content">
+        <h2>Cadastrar / Editar Veterinário</h2>
+        <form id="form-veterinarios" class="card-form">
+            <input type="hidden" id="vet-id">
+            <div class="grid-form">
+                <input type="text" id="vet-nome" placeholder="Nome do Veterinário *" required>
+                <input type="text" id="vet-crmv" placeholder="CRMV *" required>
+                <input type="text" id="vet-especialidade" placeholder="Especialidade *" required>
+                <input type="text" id="vet-telefone" placeholder="Telefone">
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn-primary">Salvar Veterinário</button>
+                <button type="button" class="btn-secondary" onclick="limparForm('veterinarios')">Cancelar</button>
+            </div>
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr><th>ID</th><th>Nome</th><th>CRMV</th><th>Especialidade</th><th>Telefone</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="lista-veterinarios"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ABA 5: SERVIÇOS -->
+    <section id="sec-servicos" class="tab-content">
+        <h2>Cadastrar / Editar Serviço</h2>
+        <form id="form-servicos" class="card-form">
+            <input type="hidden" id="servico-id">
+            <div class="grid-form">
+                <input type="text" id="servico-nome" placeholder="Nome do Serviço *" required>
+                <input type="number" step="0.01" id="servico-valor" placeholder="Valor (R$) *" required>
+                <input type="text" id="servico-descricao" placeholder="Descrição">
+            </div>
+            <div class="actions">
+                <button type="submit" class="btn-primary">Salvar Serviço</button>
+                <button type="button" class="btn-secondary" onclick="limparForm('servicos')">Cancelar</button>
+            </div>
+        </form>
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr><th>ID</th><th>Serviço</th><th>Descrição</th><th>Valor</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="lista-servicos"></tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
